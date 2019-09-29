@@ -334,15 +334,3 @@ py.iplot(fig)
 # py.init_notebook_mode(connected=True)
 # py.iplot(plot_data, filename="test")
 
-
-# In[28]:
-
-
-fig.layout.title = "test"
-
-
-# In[ ]:
-
-
-
-
