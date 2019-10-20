@@ -10,6 +10,7 @@ import dash_table
 
 import pandas as pd
 
+import visual_plot
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
@@ -57,27 +58,24 @@ def parse_contents(contents, filename, date):
         return html.Div([
             'There was an error processing this file.'
         ])
-    df = df[['title', 'time']]
-    print(df)
-    print(df.to_dict('records'))
-    print([{'name': i, 'id': i} for i in df.columns])
+    model = visual_plot.HistoryVisualiser(df)
+    model.preprocess_df()
+    model.gen_ngrams()
+    fig = model.get_fig()
     return html.Div([
-        html.H5(filename),
-        html.H6(datetime.datetime.fromtimestamp(date)),
-
-        dash_table.DataTable(
-            data=df.to_dict('records'),
-            columns=[{'name': i, 'id': i} for i in df.columns]
-        ),
-
-        html.Hr(),  # horizontal line
-
-        # For debugging, display the raw contents provided by the web browser
-        html.Div('Raw Content'),
-        html.Pre(contents[0:200] + '...', style={
-            'whiteSpace': 'pre-wrap',
-            'wordBreak': 'break-all'
-        })
+        html.Div([
+            html.H1('YouTube History Visualisation'),
+            html.H2('Summary'),
+            html.Plaintext('Loaded file: {}'.format(filename)),
+            html.Plaintext('Time of Load: {}'.format(datetime.datetime.fromtimestamp(date))),
+            html.Plaintext('Found {} entries'.format(len(df))),
+            html.H2('Visualisation'),
+            html.Hr()  # horizontal line
+        ]),
+        dcc.Graph(
+            id='test',
+            figure=fig
+        )
     ])
 
 
