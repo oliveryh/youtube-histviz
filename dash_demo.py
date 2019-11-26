@@ -17,6 +17,18 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
 app.layout = html.Div([
+    html.H1('YouTube History Visualisation'),
+    html.H2('Instructions'),
+    html.Ol([
+        html.Li(['Go to ', html.A('Google Takout', href='https://takeout.google.com/')]),
+        html.Li(['Deselect all']),
+        html.Li(['Select YouTube']),
+        html.Li(['Underneath YouTube, click on "All YouTube Data Included"']),
+        html.Li(['Deselect All']),
+        html.Li(['Select History']),
+        html.Li(['Once downloaded, upload below']),
+    ]),
+    html.H2('Upload'),
     dcc.Upload(
         id='upload-data',
         children=html.Div([
@@ -43,7 +55,6 @@ app.layout = html.Div([
 def parse_contents(contents, filename, date):
     content_type, content_string = contents.split(',')
     decoded = base64.b64decode(content_string)
-    print(decoded.decode('utf-8'))
     try:
         if 'csv' in filename:
             # Assume that the user uploaded a CSV file
@@ -64,7 +75,6 @@ def parse_contents(contents, filename, date):
     fig = model.get_fig()
     return html.Div([
         html.Div([
-            html.H1('YouTube History Visualisation'),
             html.H2('Summary'),
             html.Plaintext('Loaded file: {}'.format(filename)),
             html.Plaintext('Time of Load: {}'.format(datetime.datetime.fromtimestamp(date))),
