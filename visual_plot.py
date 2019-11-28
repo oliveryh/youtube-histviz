@@ -150,8 +150,11 @@ class HistoryVisualiser:
         REMOVALS.extend(["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"])
         REMOVALS.extend(["video", "trailer", "new", "best", "official", "removed", "music", "ft", "feat"])
         REMOVALS.extend(['official video', 'official trailer', 'music video', 'official music'])
+        zoom_factor = 3.5
         data = data.drop(data[data['keyword'].isin(REMOVALS)].index)
-
+        print("before drop {}".format(len(data)))
+        data = data[data.freq > zoom_factor]
+        print("before drop {}".format(len(data)))
         # Plot
 
         palette = ['darkturquoise', 'darkorange', 'darkorchid', 'mediumseagreen', 'royalblue', 'saddlebrown', 'tomato']
@@ -164,7 +167,7 @@ class HistoryVisualiser:
             text = [x.upper() for x in data["keyword"]],
             opacity=0.75,
             textfont={
-                'size': [x // 3.5 for x in list(data["freq"])],
+                'size': [x // zoom_factor for x in list(data["freq"])],
                 'color': plotly_colors,
                 'family': "'Oswald', sans-serif"
             }
